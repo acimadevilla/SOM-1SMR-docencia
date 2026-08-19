@@ -48,17 +48,19 @@ Dentro de cada RA, todos sus criterios de evaluación (CE) tienen el mismo peso 
 
 ### RA1 (15%) — Reconoce las características de los sistemas operativos analizando sus elementos y funciones.
 
-| CE | Criterio de evaluación | % del RA |
-|---|---|---|
-| a) | Se han identificado y descrito los elementos funcionales de un sistema informático. | 11,11% |
-| b) | Se ha codificado y relacionado la información en los diferentes sistemas de representación. | 11,11% |
-| c) | Se han analizado las funciones del sistema operativo. | 11,11% |
-| d) | Se ha descrito la arquitectura del sistema operativo. | 11,11% |
-| e) | Se han identificado los procesos y sus estados. | 11,11% |
-| f) | Se ha descrito la estructura y organización del sistema de archivos. | 11,11% |
-| g) | Se han distinguido los atributos de un archivo y un directorio. | 11,11% |
-| h) | Se han reconocido los permisos de archivos y directorios. | 11,11% |
-| i) | Se ha constatado la utilidad de los sistemas transaccionales y sus repercusiones al seleccionar un sistema de archivos. | 11,12% |
+> A diferencia del resto de RA, los CE de RA1 no se reparten a partes iguales: se ponderan según lo determinantes que son como prerrequisito de los bloques prácticos posteriores (RA5, RA3, RA4). El sistema de archivos (CE-f) y los permisos (CE-h) se usan de forma constante desde el primer bloque práctico, por lo que suben de peso; procesos (CE-e) y sistemas transaccionales (CE-i) se quedan en un nivel conceptual que no condiciona directamente ninguna práctica posterior, por lo que bajan.
+
+| CE | Criterio de evaluación | % del RA | Justificación |
+|---|---|---|---|
+| a) | Se han identificado y descrito los elementos funcionales de un sistema informático. | 11% | Base conceptual de toda la unidad. |
+| b) | Se ha codificado y relacionado la información en los diferentes sistemas de representación. | 11% | Se enseña junto al CE-h: es su prerrequisito directo. |
+| c) | Se han analizado las funciones del sistema operativo. | 11% | Conceptual, necesario para entender b/d/f. |
+| d) | Se ha descrito la arquitectura del sistema operativo. | 11% | Da el vocabulario (núcleo, shell, drivers) usado en RA3. |
+| e) | Se han identificado los procesos y sus estados. | 8% | Nivel conceptual; se retoma con herramientas reales en RA4. |
+| f) | Se ha descrito la estructura y organización del sistema de archivos. | 16% | Prerrequisito directo y constante desde RA5 en adelante. |
+| g) | Se han distinguido los atributos de un archivo y un directorio. | 9% | Descriptivo, va a rueda del CE-f. |
+| h) | Se han reconocido los permisos de archivos y directorios. | 16% | Prerrequisito directo de RA4 (chmod/chown, NTFS). |
+| i) | Se ha constatado la utilidad de los sistemas transaccionales y sus repercusiones al seleccionar un sistema de archivos. | 7% | El que menos condiciona la parte práctica posterior. |
 
 ### RA2 (10%) — Instala sistemas operativos, relacionando sus características con el hardware del equipo y el software de aplicación.
 
@@ -135,17 +137,16 @@ Propuesta de contenidos para cada bloque de la planificación (apartado 1), con 
 
 ### Bloque 1 — RA1: Fundamentos simplificados
 
+Secuencia interna de la unidad (UD01), reagrupada por peso como prerrequisito de los bloques prácticos posteriores, no por orden alfabético de CE: el sistema de archivos y los permisos, que se usan de forma constante desde RA5 en adelante, se sitúan como núcleo de la unidad; procesos y sistemas transaccionales, que no condicionan directamente ninguna práctica posterior, quedan como bloques breves de nivel conceptual.
+
 | CE | Contenidos propuestos |
 |---|---|
-| a) | Concepto de sistema informático (hardware, software, usuarios y su relación); software de base frente a software de aplicación; niveles del sistema informático (hardware → software de base → lenguajes/entornos → software de aplicación → usuario); lenguajes de programación: concepto general y ubicación en el modelo de niveles (máquina, ensamblador, alto nivel), sin sintaxis ni programación real. |
-| b) | Representación de la información limitada a lo necesario para permisos: sistema binario y octal. |
-| c) | Funciones del sistema operativo (gestión de procesos, memoria, archivos, entrada/salida), sin algoritmos de planificación. |
-| d) | Arquitectura del sistema operativo por capas (núcleo, controladores, shell, aplicaciones), comparando Windows y Linux a alto nivel. |
-| e) | Procesos y sus estados (concepto), sin planificadores ni algoritmos. |
-| f) | Estructura y organización del sistema de archivos: jerarquía, rutas. |
-| g) | Atributos de archivo y directorio en Windows y en Linux. |
-| h) | Permisos de archivos y directorios (introducción; se profundiza en el bloque 5-6, RA4). |
-| i) | Sistemas transaccionales: concepto y journaling en ext4/NTFS. |
+| 1. (a) | El sistema informático y el software: hardware, software, usuarios y su relación; software de base frente a software de aplicación; niveles del sistema informático (hardware → software de base → lenguajes/entornos → software de aplicación → usuario); lenguajes de programación: concepto general y ubicación en el modelo de niveles (máquina, ensamblador, alto nivel), sin sintaxis ni programación real. |
+| 2. (c+d) | Funciones y arquitectura del sistema operativo: gestión de procesos, memoria, archivos y entrada/salida (sin algoritmos), organizadas según la arquitectura por capas (núcleo, controladores, shell, aplicaciones); comparación Windows/Linux a alto nivel. |
+| 3. (e) | Procesos y sus estados: concepto, sin planificadores ni algoritmos — se retoma con herramientas reales (ps/top, Administrador de tareas) en RA4. |
+| 4. (f+g) | Sistema de archivos: organización y atributos. Estructura y jerarquía, rutas, atributos de archivo y directorio en Windows y Linux. |
+| 5. (b+h) | Binario/octal aplicado a permisos: representación binaria y octal (solo lo necesario para permisos) enlazada directamente con permisos de archivos y directorios (introducción; se profundiza en el bloque 5-6, RA4). |
+| 6. (i) | Sistemas transaccionales: cierre breve — concepto y journaling en ext4/NTFS, y su relevancia al elegir un sistema de archivos. |
 
 *Actividades transversales: identificación de componentes de software en imágenes, calculadora binario-octal aplicada a permisos, exploración de la jerarquía de archivos, clasificación software de base vs. aplicación.*
 
