@@ -16,7 +16,7 @@
 Al terminar UD01 el alumnado debe ser capaz de:
 
 - Explicar qué es un sistema informático y situar el sistema operativo dentro de él, distinguiendo software de base y software de aplicación.
-- Describir, sin necesidad de algoritmos, qué hace un sistema operativo y cómo se organiza por capas.
+- Describir, sin necesidad de algoritmos, qué hace un sistema operativo y cómo se organiza por capas, situando correctamente la interfaz gráfica dentro de ese esquema y distinguiendo los tipos básicos de núcleo (monolítico, microkernel, híbrido).
 - Reconocer que un proceso no es lo mismo que un programa, y nombrar sus estados básicos.
 - Moverse conceptualmente por la jerarquía de archivos de Windows y de Linux, y reconocer los atributos de archivos y directorios.
 - Convertir entre binario, octal y decimal en la medida necesaria para interpretar permisos, y leer/escribir una notación de permisos tipo `rwx` / `755`.
@@ -34,7 +34,7 @@ La secuencia **no sigue el orden alfabético de los CE** (a, b, c...) sino su pe
 | # | Epígrafe | CE | Horas aprox. | Peso en RA1 |
 |---|---|---|---|---|
 | 1 | El sistema informático y el software | a | 2 h | 11% |
-| 2 | Funciones y arquitectura del SO | c + d | 3 h | 22% |
+| 2 | Funciones y arquitectura del SO | c + d | 3,5 h | 22% |
 | 3 | Procesos y sus estados | e | 1,5 h | 8% |
 | 4 | Sistema de archivos: organización y atributos | f + g | 4 h | 25% |
 | 5 | Binario/octal aplicado a permisos y unidades de medida | b + h | 5 h | 27% |
@@ -93,19 +93,22 @@ Sobre los niveles del lenguaje: si al alumnado le suena de algo será por otro m
 
 ## Epígrafe 2 — Funciones y arquitectura del sistema operativo (CE-c + CE-d)
 
-**Duración:** 3 h · **Peso:** 22%
+**Duración:** 3,5 h · **Peso:** 22%
 
 ### Guion de clase
 
 1. **Recordatorio y enganche (10 min):** retomar el modelo de capas del epígrafe 1 y preguntar: "¿qué hace exactamente esa capa de software de base que llamamos sistema operativo?".
 2. **Las cuatro grandes funciones del SO (45 min):** gestión de procesos, gestión de memoria, gestión de archivos, gestión de entrada/salida. Para cada una: qué problema resuelve y un ejemplo cotidiano. **Sin algoritmos ni cálculos de particiones/paginación** — el objetivo es que sepan que el SO "reparte la CPU entre procesos", "organiza la RAM para que las aplicaciones no se pisen", "da acceso ordenado al disco" y "media entre las aplicaciones y los periféricos", no que sepan calcular cómo lo hace.
-3. **Arquitectura por capas (45 min):** núcleo (kernel), controladores (drivers), shell, aplicaciones. Dibujar el esquema de capas concéntricas (núcleo en el centro, aplicaciones en el exterior) y relacionarlo explícitamente con el modelo de niveles del epígrafe 1 — es la misma idea aplicada específicamente al sistema operativo.
-4. **Comparativa Windows/Linux a alto nivel (45 min):** sin entrar en tipos de kernel en profundidad (monolítico, microkernel, híbrido) salvo como nota breve, mostrar que ambos sistemas comparten esta misma arquitectura por capas aunque la implementen de forma distinta. Usar una tabla comparativa en pantalla (núcleo Linux vs. núcleo NT, shell bash/PowerShell vs. cmd, gestores de paquetes vs. instaladores .exe/.msi).
-5. **Cierre (15 min):** repaso rápido oral, encadenando: "¿qué capa falla si no reconoce mi impresora?" (drivers), "¿qué capa uso cuando escribo comandos?" (shell), etc.
+3. **Arquitectura por capas, incluyendo dónde encaja la interfaz gráfica (50 min):** núcleo (kernel), controladores (drivers), shell, aplicaciones. Dibujar el esquema de capas concéntricas (núcleo en el centro, aplicaciones en el exterior) y relacionarlo explícitamente con el modelo de niveles del epígrafe 1. Aquí es donde se resuelve una pregunta que casi todo el alumnado se hace y pocas veces verbaliza: **¿dónde está la interfaz gráfica (el escritorio, las ventanas, los iconos) en este esquema?** La respuesta: es la versión gráfica de la capa de shell, no una capa nueva ni el sistema operativo en sí — el shell es simplemente "la forma de darle órdenes al sistema", y puede ser en texto (línea de comandos) o en gráficos (escritorio). Demostración conceptual clave: **Linux puede instalarse y funcionar perfectamente sin ningún entorno gráfico** (es lo habitual en servidores), y Windows tiene su propio equivalente sin interfaz gráfica completa (Windows Server Core) — si el sistema operativo sigue funcionando sin interfaz gráfica, es la prueba de que esa interfaz es una capa aparte, no el sistema operativo mismo.
+4. **Tipos de núcleo: monolítico, microkernel e híbrido (20 min):** en un núcleo **monolítico**, todos los servicios básicos (gestión de procesos, memoria, drivers...) se ejecutan juntos en el mismo espacio privilegiado — es rápido pero un fallo en cualquier parte puede afectar a todo el núcleo; Linux es de este tipo (aunque modular, con módulos que se cargan y descargan en caliente). En un **microkernel**, el núcleo se reduce al mínimo imprescindible y el resto de servicios se ejecutan como procesos independientes y aislados — más robusto ante fallos, pero con más coste de rendimiento por la comunicación constante entre piezas separadas. Un núcleo **híbrido** combina ambas ideas, buscando el equilibrio; es el caso de Windows NT. No hace falta más profundidad que esto: la idea a transmitir es que "monolítico" no es sinónimo de "anticuado" ni "microkernel" de "mejor" — son decisiones de diseño con ventajas e inconvenientes distintos, no una jerarquía de calidad.
+5. **Comparativa Windows/Linux a alto nivel (35 min):** mostrar que ambos sistemas comparten esta misma arquitectura por capas aunque la implementen de forma distinta. Usar una tabla comparativa en pantalla (núcleo Linux vs. núcleo NT, shell bash/PowerShell vs. cmd, entorno gráfico GNOME/KDE vs. Explorador de Windows, gestores de paquetes vs. instaladores .exe/.msi).
+6. **Cierre (15 min):** repaso rápido oral, encadenando: "¿qué capa falla si no reconoce mi impresora?" (drivers), "¿qué capa uso cuando escribo comandos?" (shell), "¿y si en vez de comandos uso el ratón?" (también shell, versión gráfica).
 
 ### Contexto para el profesorado
 
-Sobre el kernel: merece la pena mencionar, aunque sea en una frase, que Linux usa un núcleo monolítico (aunque modular, con módulos que se cargan y descargan en caliente) y que Windows NT usa un núcleo híbrido. No hace falta desarrollarlo como contenido evaluable — es cultura técnica que ayuda a que la comparativa Windows/Linux no quede plana, y probablemente surgirá si algún alumno ha oído hablar de microkernels o de proyectos como GNU Hurd.
+Sobre los tipos de núcleo: se ha optado por incluirlo como contenido breve del guion (no solo como nota para el profesorado) porque ayuda a fijar que la arquitectura por capas no es una simplificación de clase, sino una decisión de diseño real con distintas variantes. No hace falta profundizar en ejemplos de microkernel puro más allá de nombrarlo (Mach, GNU Hurd, MINIX) — con que quede claro el concepto y que sepan situar Linux (monolítico) y Windows (híbrido) es suficiente para el nivel de esta unidad.
+
+Sobre la interfaz gráfica: esta explicación conecta directamente con dos errores frecuentes ya señalados en el epígrafe 1 y en este mismo epígrafe (confundir sistema operativo con interfaz gráfica, y shell con sistema operativo) — es el momento de cerrarlos definitivamente con un ejemplo concreto y verificable (los servidores sin interfaz gráfica), no solo con una afirmación teórica. Además, deja sembrado un contenido que van a ver de forma práctica y evaluable en RA3 ("se han diferenciado los interfaces de usuario según sus propiedades", CLI vs. entorno gráfico).
 
 Es un buen momento para sembrar, sin desarrollarlo, que "el sistema operativo reparte la CPU entre procesos" es una función que en RA1 se queda en lo conceptual, pero que en RA4 van a ver herramientas reales (`top`, Administrador de tareas) que muestran ese reparto en vivo. Decirlo explícitamente ayuda a que no sientan que "esto no vale para nada práctico".
 
@@ -114,31 +117,36 @@ Es un buen momento para sembrar, sin desarrollarlo, que "el sistema operativo re
 - **Creer que el kernel es "todo el sistema operativo".** Es habitual que, tras ver el esquema de capas, algunos entiendan que el núcleo y el sistema operativo son sinónimos. Conviene remarcar que el SO es el conjunto de todas las capas de software de base, y el núcleo es solo la más interna (la que habla directamente con el hardware).
 - **Pensar que los drivers los "hace" el sistema operativo.** Muchos alumnos no saben que los controladores suelen venir del fabricante del hardware, no del sistema operativo, y que el SO simplemente define cómo debe comunicarse un driver con él.
 - **Confundir shell con sistema operativo.** Sobre todo entre quienes ya han visto una terminal antes: piensan que "bash es Linux" o "PowerShell es Windows". Es el momento de dejar claro que el shell es solo una capa más, intercambiable (se puede usar zsh en vez de bash, o cmd en vez de PowerShell) sin cambiar de sistema operativo.
+- **Pensar que la interfaz gráfica "es" el sistema operativo, o que un sistema sin interfaz gráfica "no tiene sistema operativo".** Es la versión más extendida de la confusión anterior, y la más persistente si no se aborda con un ejemplo concreto — de ahí la importancia de mostrar el caso de los servidores sin entorno gráfico.
+- **Pensar que "monolítico" es una arquitectura anticuada y "microkernel" la moderna/mejor.** No hay una jerarquía de calidad entre ambos: son decisiones de diseño con ventajas e inconvenientes distintos, y algunos de los sistemas más usados del mundo (Linux) son monolíticos.
 
 ### Preguntas frecuentes del alumnado
 
 - *"¿Por qué Windows no deja tocar el núcleo y Linux sí?"* — Ambos protegen el núcleo del acceso directo de las aplicaciones de usuario (por seguridad y estabilidad), pero Linux, al ser de código abierto, permite inspeccionar y modificar el propio código fuente del núcleo, cosa que con Windows no es posible salvo con herramientas y permisos muy específicos que quedan fuera del alcance de este módulo.
 - *"¿Se puede tener varios núcleos en un mismo ordenador?"* — Aquí conviene distinguir "núcleo del sistema operativo" (kernel) de "núcleo de la CPU" (core), que es una confusión de vocabulario muy habitual a esta edad por el marketing de procesadores ("procesador de 8 núcleos"). Merece una aclaración explícita aunque no esté prevista en el guion, porque si no se aclara arrastra el malentendido durante el resto del curso.
+- *"Entonces, ¿si no tengo interfaz gráfica, no tengo sistema operativo?"* — Al revés: el sistema operativo sigue completamente presente y funcionando (núcleo, gestión de procesos, memoria, archivos...); lo único que falta es la capa de shell en su versión gráfica. De hecho, es exactamente así como funcionan la mayoría de servidores del mundo, incluidos los que dan servicio a aplicaciones y páginas web que el alumnado usa a diario.
+- *"¿Por qué un servidor no tendría interfaz gráfica si la puede tener?"* — Consume recursos (CPU, RAM) y superficie de ataque de seguridad que no aportan nada si nadie va a sentarse delante de esa máquina con teclado y ratón; se administra por red, normalmente en modo texto.
 
 ### Actividad / práctica
 
-**Enunciado:** tabla comparativa Windows/Linux a completar por parejas, con columnas: elemento (núcleo, shell, gestor de paquetes/instaladores, drivers) y una fila para "qué hace" y otra para "ejemplo en Windows"/"ejemplo en Linux". Después, puesta en común oral.
+**Enunciado:** tabla comparativa Windows/Linux a completar por parejas, con columnas: elemento (núcleo, shell/interfaz de usuario, gestor de paquetes/instaladores, drivers) y una fila para "qué hace" y otra para "ejemplo en Windows"/"ejemplo en Linux". Después, puesta en común oral, cerrando con la pregunta: "¿en qué capa está el escritorio que usáis todos los días?".
 
 **Solución orientativa:**
 
 | Elemento | Qué hace | Windows | Linux |
 |---|---|---|---|
 | Núcleo | Gestiona hardware, procesos, memoria a bajo nivel | Núcleo NT (híbrido) | Núcleo Linux (monolítico modular) |
-| Shell | Interfaz de línea de comandos | CMD / PowerShell | bash / zsh |
+| Shell / interfaz de usuario | Forma de darle órdenes al sistema, en texto o en gráficos | CMD / PowerShell (texto); Explorador de Windows (gráfico) | bash / zsh (texto); GNOME / KDE (gráfico) |
 | Gestión de software | Instalación y actualización de programas | Instaladores .exe/.msi, Microsoft Store, winget | Gestores de paquetes (APT, DNF) |
 | Controladores | Comunican el SO con dispositivos concretos | Suministrados por el fabricante, instalados vía Windows Update o manualmente | Suministrados por el fabricante o integrados en el propio núcleo |
 
-**Qué mirar al corregir:** el error más informativo es que confundan "shell" con "sistema operativo" en la columna de "qué hace" — es la señal más clara de que el epígrafe necesita repaso antes de seguir a RA3, donde esta distinción es constante.
+**Qué mirar al corregir:** el error más informativo es que confundan "shell/interfaz" con "sistema operativo" en la columna de "qué hace", o que solo mencionen la versión gráfica de la interfaz sin saber que también existe en texto (o al revés) — es la señal más clara de que el epígrafe necesita repaso antes de seguir a RA3, donde esta distinción (CLI vs. entorno gráfico) es constante.
 
 ### Curiosidades
 
 - El núcleo Linux se originó en 1991 como proyecto personal de Linus Torvalds, entonces estudiante, y hoy es uno de los proyectos de software colaborativo más grandes del mundo — sigue creciendo y aceptando contribuciones de miles de desarrolladores.
 - Windows NT (la base de todos los Windows modernos, desde XP hasta 11) no viene de MS-DOS, como mucha gente cree: se diseñó desde cero en los 90, con influencia directa de VMS, otro sistema operativo anterior en el que trabajó parte del mismo equipo de ingenieros.
+- macOS (y por tanto iOS) usa un núcleo híbrido llamado XNU, que combina un microkernel (Mach) con componentes tomados de un núcleo monolítico (BSD) — un tercer ejemplo real, además de Windows, de que "híbrido" no es una rareza académica sino una solución de compromiso muy usada en la práctica.
 
 ---
 
@@ -344,7 +352,8 @@ Epígrafe deliberadamente corto — es el contenido de la unidad con menos relac
 ### Resumen de la unidad (para repasar antes del examen)
 
 - Un sistema informático es hardware + software + usuarios; el software se divide en software de base (SO, drivers, utilidades) y software de aplicación.
-- El sistema operativo se organiza por capas: núcleo, controladores, shell, aplicaciones — y cumple cuatro grandes funciones: gestión de procesos, memoria, archivos y entrada/salida.
+- El sistema operativo se organiza por capas: núcleo, controladores, shell, aplicaciones — y cumple cuatro grandes funciones: gestión de procesos, memoria, archivos y entrada/salida. La interfaz gráfica es la versión gráfica de la capa de shell, no una capa aparte ni el sistema operativo en sí (prueba: un servidor puede funcionar sin ella).
+- Los núcleos pueden ser monolíticos (Linux), híbridos (Windows, macOS) o microkernel — son decisiones de diseño distintas, no una jerarquía de calidad.
 - Un proceso es un programa en ejecución, con estados (nuevo, listo, ejecución, bloqueado, terminado) — sin entrar en cómo decide el SO cuál ejecutar.
 - Windows y Linux organizan sus archivos de forma distinta (letras de unidad frente a árbol único), y Linux distingue mayúsculas de minúsculas en los nombres.
 - La conversión binario-octal existe, en el contexto de esta unidad, para poder leer y escribir permisos: cada dígito octal representa un conjunto completo de permisos `rwx`.
@@ -370,6 +379,8 @@ Epígrafe deliberadamente corto — es el contenido de la unidad con menos relac
 
 - Clasificación de elementos de software (tipo test o respuesta corta), similar a la actividad del epígrafe 1.
 - Pregunta de desarrollo corto: "explica la diferencia entre núcleo y shell, con un ejemplo de cada uno en Windows y en Linux".
+- Pregunta de desarrollo corto: "explica por qué un servidor puede funcionar sin interfaz gráfica y qué demuestra eso sobre la relación entre sistema operativo e interfaz gráfica".
+- Verdadero/falso o relación de conceptos sobre tipos de núcleo (monolítico/microkernel/híbrido) y qué sistema operativo real usa cada uno.
 - Verdadero/falso sobre estados de procesos, incluyendo algún distractor que confunda "bloqueado" con "terminado".
 - Ejercicio de conversión decimal-binario-octal y de notación de permisos (simbólica ↔ numérica), del mismo estilo que la práctica del epígrafe 5 pero con valores distintos.
 - Ejercicio de cálculo de múltiplos del byte (SI ↔ IEC 80000-13) con la capacidad de un disco distinto al usado en clase, pidiendo que se muestre el cálculo, no solo el resultado.
