@@ -20,6 +20,7 @@ Al terminar UD01 el alumnado debe ser capaz de:
 - Reconocer que un proceso no es lo mismo que un programa, y nombrar sus estados básicos.
 - Moverse conceptualmente por la jerarquía de archivos de Windows y de Linux, y reconocer los atributos de archivos y directorios.
 - Convertir entre binario, octal y decimal en la medida necesaria para interpretar permisos, y leer/escribir una notación de permisos tipo `rwx` / `755`.
+- Calcular múltiplos del byte en el Sistema Internacional (kilo/mega/giga) y en la norma IEC 80000-13 (kibi/mebi/gibi), y explicar por qué un disco anunciado como "500 GB" se muestra como "~465 GB" al formatearlo.
 - Explicar por qué existen los sistemas de archivos transaccionales (journaling) y qué problema resuelven.
 
 **Idea fuerza de la unidad:** todo lo que se explica aquí es vocabulario y base conceptual que se va a usar constantemente a partir de RA5. Conviene decírselo explícitamente al alumnado desde la primera sesión — motiva mucho más "esto lo vas a necesitar dentro de tres semanas para instalar tu propia VM" que "esto entra en el examen".
@@ -36,7 +37,7 @@ La secuencia **no sigue el orden alfabético de los CE** (a, b, c...) sino su pe
 | 2 | Funciones y arquitectura del SO | c + d | 3 h | 22% |
 | 3 | Procesos y sus estados | e | 1,5 h | 8% |
 | 4 | Sistema de archivos: organización y atributos | f + g | 4 h | 25% |
-| 5 | Binario/octal aplicado a permisos | b + h | 4,5 h | 27% |
+| 5 | Binario/octal aplicado a permisos y unidades de medida | b + h | 5 h | 27% |
 | 6 | Sistemas transaccionales | i | 1 h | 7% |
 | — | Caso práctico integrador + resumen + repaso | todos | 2-3 h | — |
 
@@ -221,51 +222,71 @@ Sobre el montaje de discos en Linux: no hace falta profundizar en `/etc/fstab` n
 
 ---
 
-## Epígrafe 5 — Binario/octal aplicado a permisos (CE-b + CE-h)
+## Epígrafe 5 — Binario/octal aplicado a permisos y unidades de medida (CE-b + CE-h)
 
-**Duración:** 4,5 h · **Peso:** 27%
+**Duración:** 5 h · **Peso:** 27%
 
 ### Guion de clase
 
 1. **Por qué el ordenador usa binario (15 min):** un transistor tiene dos estados (encendido/apagado), y esa es la razón física de fondo, no una elección arbitraria. Conectar con lo ya visto: esto es representación de la información, no aritmética por aritmética.
 2. **Sistema binario: conversión básica (40 min):** de decimal a binario y de binario a decimal, con números pequeños (0-255, un byte). No hay que llegar a operaciones aritméticas en binario (sumas, restas) — el objetivo es leer y convertir, no calcular con binario.
-3. **Sistema octal y por qué nos interesa aquí (30 min):** convertir binario a octal agrupando en bloques de 3 bits, y explicar **la razón real de que se use octal para permisos**: un permiso rwx son exactamente 3 bits (activado/desactivado cada uno), así que un dígito octal representa exactamente un conjunto de permisos completo. Esto es el "por qué" que conecta ambos contenidos y por eso se enseñan juntos.
-4. **Permisos de archivos y directorios: introducción (60 min):** en Linux, los tres conjuntos de permisos (propietario, grupo, otros) y los tres tipos (lectura, escritura, ejecución), su representación simbólica (`rwxr-xr--`) y numérica (`754`). Mostrar con `ls -la` en una VM o captura. Introducir brevemente que Windows también tiene permisos (NTFS) pero con un modelo distinto (listas de control de acceso, ACL) que se verá en profundidad en RA4 — aquí solo se menciona que existen y que son más granulares.
-5. **De binario a permiso real: ejercicio guiado en la pizarra (40 min):** coger un número octal (por ejemplo, 640) y descomponerlo en binario, y de ahí a qué puede hacer cada conjunto de usuarios. Hacerlo al revés también: dado un `rw-r-----`, obtener el octal.
-6. **Cierre (5 min):** enlazar con RA4: "esto que acabáis de aprender es exactamente lo que vais a usar con el comando `chmod` dentro de unas semanas".
+3. **Unidades de medida de la información: SI frente a IEC 80000-13 (30 min):** el byte como unidad base, y sus múltiplos según dos normas distintas: el Sistema Internacional (kilo, mega, giga... en base 10, potencias de 1000) y la norma **IEC 80000-13** —heredera de la antigua IEC 60027-2— que define los prefijos binarios (kibi, mebi, gibi... en base 2, potencias de 1024) precisamente para no confundir ambos sistemas. Cálculo de conversión entre ambos con un par de ejemplos numéricos sencillos.
+4. **El caso real: por qué un disco de 500 GB se queda en ~465 GB (20 min):** ver más abajo el desarrollo completo del ejemplo. Es el momento de conectar la teoría de múltiplos con algo que el alumnado va a comprobar por sí mismo en cuanto empiece a particionar discos en RA5.
+5. **Sistema octal y por qué nos interesa aquí (30 min):** convertir binario a octal agrupando en bloques de 3 bits, y explicar **la razón real de que se use octal para permisos**: un permiso rwx son exactamente 3 bits (activado/desactivado cada uno), así que un dígito octal representa exactamente un conjunto de permisos completo. Esto es el "por qué" que conecta ambos contenidos y por eso se enseñan juntos.
+6. **Permisos de archivos y directorios: introducción (60 min):** en Linux, los tres conjuntos de permisos (propietario, grupo, otros) y los tres tipos (lectura, escritura, ejecución), su representación simbólica (`rwxr-xr--`) y numérica (`754`). Mostrar con `ls -la` en una VM o captura. Introducir brevemente que Windows también tiene permisos (NTFS) pero con un modelo distinto (listas de control de acceso, ACL) que se verá en profundidad en RA4 — aquí solo se menciona que existen y que son más granulares.
+7. **De binario a permiso real: ejercicio guiado en la pizarra (40 min):** coger un número octal (por ejemplo, 640) y descomponerlo en binario, y de ahí a qué puede hacer cada conjunto de usuarios. Hacerlo al revés también: dado un `rw-r-----`, obtener el octal.
+8. **Cierre (5 min):** enlazar con RA4 y con RA5: "esto que acabáis de aprender sobre permisos es lo que vais a usar con `chmod`; lo de los múltiplos del byte es lo que os va a explicar por qué el disco que le asignéis a una VM nunca coincide exactamente con el número que hayáis escrito".
+
+### El caso real: el disco de 500 GB que se queda en ~465 GB
+
+Este es el ejemplo que conviene desarrollar despacio en la pizarra, porque resume por qué hacen falta las dos normas:
+
+- Los **fabricantes de discos** anuncian la capacidad en el Sistema Internacional, en base 10: un disco "de 500 GB" tiene exactamente 500 × 10⁹ = 500.000.000.000 bytes. Esto no es un truco de marketing malintencionado — es una convención de la industria del almacenamiento, coherente con el resto de unidades del SI (igual que 1 km son 1000 m, no 1024).
+- Los **sistemas operativos**, en cambio, calculan y muestran la capacidad en base 2, contando en potencias de 1024 — pero durante décadas la han etiquetado, por error histórico, con el mismo nombre "GB" que corresponde al SI. Lo que realmente se está mostrando es GiB (gibibytes), no GB.
+- Al convertir esos 500.000.000.000 bytes a GiB: 500.000.000.000 ÷ 1024³ = 500.000.000.000 ÷ 1.073.741.824 ≈ **465,7 GiB**, que el sistema operativo etiqueta (mal, pero es lo habitual) como "465 GB".
+
+No se ha perdido ningún dato ni el fabricante ha "engañado": son exactamente los mismos bytes, contados con dos reglas distintas para agruparlos. Merece la pena remarcar que sistemas operativos más recientes (algunas versiones de macOS, por ejemplo) ya muestran GB en base 10 de verdad, coincidiendo con el fabricante — lo cual, irónicamente, genera la confusión inversa cuando el alumnado compara capturas de pantalla de sistemas distintos.
 
 ### Contexto para el profesorado
 
-Este es el epígrafe con más peso de toda la unidad, y con razón: es el único contenido de RA1 que se va a usar de forma **literal y directa** en RA4 (no solo como base conceptual). Merece la pena no economizar tiempo aquí.
+Este es el epígrafe con más peso de toda la unidad, y con razón: es el único contenido de RA1 que se va a usar de forma **literal y directa** en RA4 (no solo como base conceptual), y el bloque de múltiplos del byte es el que más "aja, ahora lo entiendo" suele generar, porque es una confusión que casi todo el alumnado ha vivido sin saber por qué ocurría.
 
-La clave pedagógica de este epígrafe es que **CE-b y CE-h no son dos temas distintos que coinciden en la misma sesión**: son la misma idea, ligada desde el principio. Enseñar binario/octal como aritmética abstracta y solo semanas después (en RA4) aplicarlo a permisos es la razón principal por la que, en cursos anteriores, buena parte del alumnado llegaba a RA4 sin recordar cómo convertir a octal. Al enseñarlo junto con su aplicación inmediata, la conversión deja de ser "matemáticas sin sentido" y pasa a ser "la herramienta que necesito para leer `chmod 755`".
+La clave pedagógica de este epígrafe es que **CE-b y CE-h no son dos temas distintos que coinciden en la misma sesión**: son la misma idea, ligada desde el principio. Enseñar binario/octal como aritmética abstracta y solo semanas después (en RA4) aplicarlo a permisos es la razón principal por la que, en cursos anteriores, buena parte del alumnado llegaba a RA4 sin recordar cómo convertir a octal. Al enseñarlo junto con su aplicación inmediata, la conversión deja de ser "matemáticas sin sentido" y pasa a ser "la herramienta que necesito para leer `chmod 755`". Lo mismo aplica a los múltiplos del byte: no es una curiosidad aislada, es la explicación de algo que van a ver con sus propios ojos en RA5.
 
-No hace falta enseñar hexadecimal en este punto — no es necesario para permisos y añadiría carga sin beneficio práctico en esta unidad.
+No hace falta enseñar hexadecimal en este punto — no es necesario para permisos y añadiría carga sin beneficio práctico en esta unidad. Tampoco hace falta memorizar la norma IEC 80000-13 por su nombre ni su histórico (viene de la antigua IEC 60027-2, de 1998-2005) — basta con que sepan que existe una norma internacional específica para los prefijos binarios y por qué hizo falta crearla.
 
 ### Errores conceptuales frecuentes
 
 - **Intentar memorizar la tabla de conversión en vez de entender el mecanismo.** Es el error más costoso a medio plazo: memorizar "755 = rwxr-xr-x" sin saber por qué hace que cualquier combinación no memorizada (por ejemplo 640) los deje bloqueados. Insistir siempre en el método (binario → agrupar en 3 → octal), no en la memorización de casos.
 - **Olvidar que hay tres conjuntos de permisos, no uno.** Es habitual que, al principio, piensen en "los permisos del archivo" en genérico, sin distinguir propietario/grupo/otros.
 - **Confundir permiso de ejecución con "se puede abrir".** En un directorio, el permiso de ejecución significa "se puede *entrar* en él" (acceder a su contenido), no "ejecutarlo" como si fuera un programa — es una fuente de confusión constante y merece una aclaración explícita.
+- **Pensar que GB y GiB son "casi lo mismo, da igual".** La diferencia es pequeña en porcentaje a escala de kilobyte (un 2,4%) pero crece con cada múltiplo (un 7% en giga, casi un 10% en tera) — suficiente para generar confusión real al planificar el tamaño de discos y particiones en RA5.
 
 ### Preguntas frecuentes del alumnado
 
 - *"¿Por qué no se usa hexadecimal si también agrupa bits?"* — Buena pregunta técnica: hexadecimal agrupa de 4 en 4 bits, y un permiso son exactamente 3 bits, así que no encaja limpiamente; octal, al agrupar de 3 en 3, representa un conjunto de permisos completo en un solo dígito.
 - *"¿Y en Windows también hay algo como 755?"* — No exactamente: NTFS usa permisos más granulares y no se resumen con la misma notación numérica. La equivalencia conceptual (quién puede leer/escribir/ejecutar) sí existe, pero el mecanismo es diferente y se verá en RA4 Windows.
+- *"¿Entonces me han estafado al venderme un disco de 500 GB?"* — No: son exactamente los bytes que se anuncian, contados en base 10 tal y como marca el SI. Lo que ocurre es que el sistema operativo los muestra contados en base 2 (GiB) pero etiquetados como si fueran GB — es un problema de etiquetado heredado históricamente, no de cantidad real de bytes.
+- *"¿Y con la RAM pasa lo mismo?"* — Al revés: la memoria RAM se fabrica físicamente en potencias de 2 (por su propio diseño en circuitos), así que ahí no hay discrepancia entre lo que anuncia el fabricante y lo que muestra el sistema — es una buena pregunta para remarcar que el problema del disco es una cuestión de convención de medida, no un fenómeno universal de todo el hardware.
 
 ### Actividad / práctica
 
 **Enunciado (parte 1):** tabla de conversión decimal-binario-octal a completar con 8-10 valores entre 0 y 7 (para los dígitos octales individuales) y luego 3-4 valores de un byte completo (0-255).
 
-**Enunciado (parte 2):** dados 5 permisos en notación simbólica (`rwxr-xr-x`, `rw-rw-r--`, `rwx------`, `r--r--r--`, `rwxrwxrwx`), obtener su notación octal. Y a la inversa, dados 5 valores octales (750, 644, 600, 777, 640), obtener la notación simbólica y explicar en una frase qué puede hacer cada tipo de usuario.
+**Enunciado (parte 2 — múltiplos del byte):** dada la capacidad anunciada de tres discos distintos (1 TB, 256 GB, 500 GB), calcular cuántos GiB/TiB mostrará aproximadamente el sistema operativo al formatearlos, mostrando el cálculo (no solo el resultado).
 
-**Solución (parte 2, primer bloque):** `rwxr-xr-x` → 755; `rw-rw-r--` → 664; `rwx------` → 700; `r--r--r--` → 444; `rwxrwxrwx` → 777.
+**Enunciado (parte 3 — permisos):** dados 5 permisos en notación simbólica (`rwxr-xr-x`, `rw-rw-r--`, `rwx------`, `r--r--r--`, `rwxrwxrwx`), obtener su notación octal. Y a la inversa, dados 5 valores octales (750, 644, 600, 777, 640), obtener la notación simbólica y explicar en una frase qué puede hacer cada tipo de usuario.
 
-**Qué mirar al corregir:** el fallo más revelador es cuando el resultado final es correcto pero el alumno no puede explicar el paso intermedio (la conversión a binario) — indica que ha memorizado un patrón en vez de entender el mecanismo, y es precisamente el tipo de error que se manifestará en RA4 en cuanto aparezca un valor no memorizado.
+**Solución (parte 2):** 1 TB = 1×10¹² bytes ÷ 1024⁴ ≈ 0,909 TiB (~909 GiB); 256 GB = 256×10⁹ bytes ÷ 1024³ ≈ 238,4 GiB; 500 GB ≈ 465,7 GiB (el mismo cálculo desarrollado en el guion).
+
+**Solución (parte 3):** `rwxr-xr-x` → 755; `rw-rw-r--` → 664; `rwx------` → 700; `r--r--r--` → 444; `rwxrwxrwx` → 777.
+
+**Qué mirar al corregir:** en la parte 2, el fallo más habitual es dividir por 1000³/1000⁴ en vez de 1024³/1024⁴ — es exactamente el error que confirma que no han entendido la diferencia entre ambas normas, no un simple fallo de cálculo. En la parte 3, el fallo más revelador es cuando el resultado final es correcto pero el alumno no puede explicar el paso intermedio (la conversión a binario) — indica que ha memorizado un patrón en vez de entender el mecanismo, y es precisamente el tipo de error que se manifestará en RA4 en cuanto aparezca un valor no memorizado.
 
 ### Curiosidades
 
 - El modelo de permisos `rwx` de propietario/grupo/otros viene directamente de Unix, de los años 70, y se ha mantenido prácticamente intacto en Linux y macOS (que también deriva de Unix) durante más de cincuenta años — pocas piezas de diseño de software han demostrado tanta durabilidad.
+- Los prefijos binarios (kibi, mebi, gibi...) los propuso formalmente la Comisión Electrotécnica Internacional en 1998 —precisamente para resolver esta ambigüedad de una vez—, pero más de veinticinco años después la mayoría de sistemas operativos y fabricantes de software todavía no los usan en su interfaz, y siguen mostrando "GB" cuando en realidad calculan en GiB.
 
 ---
 
@@ -328,6 +349,7 @@ Epígrafe deliberadamente corto — es el contenido de la unidad con menos relac
 - Windows y Linux organizan sus archivos de forma distinta (letras de unidad frente a árbol único), y Linux distingue mayúsculas de minúsculas en los nombres.
 - La conversión binario-octal existe, en el contexto de esta unidad, para poder leer y escribir permisos: cada dígito octal representa un conjunto completo de permisos `rwx`.
 - Los permisos definen qué puede hacer el propietario, el grupo y el resto de usuarios sobre un archivo o directorio.
+- El byte tiene múltiplos según dos normas distintas: el SI (kilo/mega/giga, base 10, los que anuncia el fabricante) y la IEC 80000-13 (kibi/mebi/gibi, base 2, los que suele calcular y mal-etiquetar el sistema operativo como "GB") — de ahí que un disco de 500 GB se muestre como ~465 GB.
 - El journaling protege la consistencia del sistema de archivos ante interrupciones, pero no sustituye a las copias de seguridad.
 
 ### Tabla de correspondencia RA/CE
@@ -350,5 +372,6 @@ Epígrafe deliberadamente corto — es el contenido de la unidad con menos relac
 - Pregunta de desarrollo corto: "explica la diferencia entre núcleo y shell, con un ejemplo de cada uno en Windows y en Linux".
 - Verdadero/falso sobre estados de procesos, incluyendo algún distractor que confunda "bloqueado" con "terminado".
 - Ejercicio de conversión decimal-binario-octal y de notación de permisos (simbólica ↔ numérica), del mismo estilo que la práctica del epígrafe 5 pero con valores distintos.
+- Ejercicio de cálculo de múltiplos del byte (SI ↔ IEC 80000-13) con la capacidad de un disco distinto al usado en clase, pidiendo que se muestre el cálculo, no solo el resultado.
 - Pregunta de caso corto (versión reducida del caso práctico integrador) para comprobar si conectan permisos con sistemas de archivos y con la arquitectura por capas.
 - Pregunta de reflexión breve sobre journaling, evitando que se pueda responder solo con la palabra "copia de seguridad".
