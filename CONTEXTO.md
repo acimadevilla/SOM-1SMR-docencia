@@ -282,24 +282,13 @@ Esto empuja el contenido de la carpeta `apuntes/` (con su historial) al
 repo público, sin tocar `docencia/`. Es un paso manual y deliberado: nunca
 se ejecuta como parte de un commit normal ni de forma automática.
 ---
-## 10. Estado del proyecto (a la fecha de este documento)
-- ✅ Mapa global de bloques cerrado y detallado con asociación a CE.
-- ✅ Secuenciación RA1 → RA5 → RA3 → RA4 acordada.
-- ✅ Ponderación de RA propuesta (pendiente de aprobación departamental).
-- ✅ Tratamiento RA2/RA5 definido y documentado.
-- ✅ Estrategia de publicación decidida: dos repositorios (privado con todo,
-  público solo con `apuntes/`), vía `git subtree push`. Estructura de
-  carpetas del repo privado reorganizada con `docencia/` y `apuntes/` en
-  la raíz para facilitar la publicación selectiva.
-- ⬜ Actualización formal del documento oficial "Criterios de evaluación y
-  calificación" (plantilla ya disponible) con la ponderación nueva — aún
-  no generado.
-- ⬜ Desarrollo de UD01 (Bloque 1, RA1) — aún no iniciado.
-- ⬜ Resto de unidades — pendientes, se desarrollan una a una y solo cuando
-  se solicite explícitamente (nunca varias a la vez salvo petición expresa).
-**Siguiente paso natural:** desarrollar UD01 completa (docencia + apuntes),
-o bien actualizar primero el documento oficial de criterios de evaluación
-y calificación con la ponderación nueva.
+## 10. Estado del proyecto
+El estado del proyecto (qué está hecho, qué falta, progreso por unidad
+didáctica, próximos pasos) ya **no se mantiene en este documento** para
+evitar que quede desactualizado — vive en [ESTADO.md](ESTADO.md), que se
+actualiza después de cada sesión de trabajo relevante. Este CONTEXTO.md
+se queda solo con las decisiones de fondo ("el porqué"), que cambian con
+mucha menos frecuencia.
 ---
 ## 11. Reglas de trabajo a mantener
 - No generar varias unidades a la vez salvo petición expresa.

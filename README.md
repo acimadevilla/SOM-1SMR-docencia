@@ -7,6 +7,8 @@ Repositorio **privado**: contiene tanto el material de docencia (guiones de
 clase para el profesor) como los apuntes del alumnado. Es la fuente de
 verdad única del proyecto.
 
+**¿Retomando el proyecto tras un tiempo?** Empieza por [ESTADO.md](ESTADO.md) — resume qué está hecho, qué falta y cuál es el siguiente paso.
+
 Contexto completo del proyecto (objetivos, secuenciación, ponderación de RA,
 enfoque pedagógico): [CONTEXTO.md](CONTEXTO.md).
 
