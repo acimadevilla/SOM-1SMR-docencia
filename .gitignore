@@ -1,0 +1,10 @@
+# Configuración local de Claude Code (no es contenido del proyecto)
+.claude/settings.local.json
+
+# Archivos de bloqueo temporal de Word/Office
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# macOS
+.DS_Store

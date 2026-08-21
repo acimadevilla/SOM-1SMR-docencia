@@ -3,7 +3,7 @@
 **Módulo:** Sistemas Operativos Monopuesto · 1º SMR
 **RA cubierto:** RA1 — *Reconoce las características de los sistemas operativos analizando sus elementos y funciones* (15% de la nota del módulo)
 **CE cubiertos:** a, b, c, d, e, f, g, h, i (los 9 de RA1)
-**Duración orientativa:** 18-20 h · 4 semanas (a 5 h/semana)
+**Duración orientativa:** 19-21 h · 4 semanas (a 5 h/semana)
 **Prerrequisitos:** ninguno — es la primera unidad del curso.
 **Con qué conecta después:** esta unidad no se evalúa de forma aislada. El sistema de archivos (epígrafe 4) y los permisos (epígrafe 5) se usan de forma constante desde RA5 (instalación y particionado de VMs) y son prerrequisito directo de RA4 (administración con `chmod`/`chown` y permisos NTFS). La arquitectura por capas (epígrafe 2) da el vocabulario —núcleo, shell, controladores— que se reutiliza al explicar GRUB/systemd en RA3 Linux y el arranque de Windows en RA3 Windows.
 
@@ -20,6 +20,7 @@ Al terminar UD01 el alumnado debe ser capaz de:
 - Reconocer que un proceso no es lo mismo que un programa, y nombrar sus estados básicos.
 - Moverse conceptualmente por la jerarquía de archivos de Windows y de Linux, y reconocer los atributos de archivos y directorios.
 - Convertir entre binario, octal y decimal en la medida necesaria para interpretar permisos, y leer/escribir una notación de permisos tipo `rwx` / `755`.
+- Explicar qué es la codificación de caracteres (ASCII, Unicode, UTF-8/UTF-16) y por qué existe más de una tabla de correspondencia entre bytes y texto.
 - Calcular múltiplos del byte en el Sistema Internacional (kilo/mega/giga) y en la norma IEC 80000-13 (kibi/mebi/gibi), y explicar por qué un disco anunciado como "500 GB" se muestra como "~465 GB" al formatearlo.
 - Explicar por qué existen los sistemas de archivos transaccionales (journaling) y qué problema resuelven.
 
@@ -37,7 +38,7 @@ La secuencia **no sigue el orden alfabético de los CE** (a, b, c...) sino su pe
 | 2 | Funciones y arquitectura del SO | c + d | 3,5 h | 22% |
 | 3 | Procesos y sus estados | e | 1,5 h | 8% |
 | 4 | Sistema de archivos: organización y atributos | f + g | 4 h | 25% |
-| 5 | Binario/octal aplicado a permisos y unidades de medida | b + h | 5 h | 27% |
+| 5 | Binario/octal aplicado a permisos, codificación de caracteres y unidades de medida | b + h | 5,5 h | 27% |
 | 6 | Sistemas transaccionales | i | 1 h | 7% |
 | — | Caso práctico integrador + resumen + repaso | todos | 2-3 h | — |
 
@@ -230,20 +231,21 @@ Sobre el montaje de discos en Linux: no hace falta profundizar en `/etc/fstab` n
 
 ---
 
-## Epígrafe 5 — Binario/octal aplicado a permisos y unidades de medida (CE-b + CE-h)
+## Epígrafe 5 — Binario/octal aplicado a permisos, codificación de caracteres y unidades de medida (CE-b + CE-h)
 
-**Duración:** 5 h · **Peso:** 27%
+**Duración:** 5,5 h · **Peso:** 27%
 
 ### Guion de clase
 
 1. **Por qué el ordenador usa binario (15 min):** un transistor tiene dos estados (encendido/apagado), y esa es la razón física de fondo, no una elección arbitraria. Conectar con lo ya visto: esto es representación de la información, no aritmética por aritmética.
 2. **Sistema binario: conversión básica (40 min):** de decimal a binario y de binario a decimal, con números pequeños (0-255, un byte). No hay que llegar a operaciones aritméticas en binario (sumas, restas) — el objetivo es leer y convertir, no calcular con binario.
-3. **Unidades de medida de la información: SI frente a IEC 80000-13 (30 min):** el byte como unidad base, y sus múltiplos según dos normas distintas: el Sistema Internacional (kilo, mega, giga... en base 10, potencias de 1000) y la norma **IEC 80000-13** —heredera de la antigua IEC 60027-2— que define los prefijos binarios (kibi, mebi, gibi... en base 2, potencias de 1024) precisamente para no confundir ambos sistemas. Cálculo de conversión entre ambos con un par de ejemplos numéricos sencillos.
-4. **El caso real: por qué un disco de 500 GB se queda en ~465 GB (20 min):** ver más abajo el desarrollo completo del ejemplo. Es el momento de conectar la teoría de múltiplos con algo que el alumnado va a comprobar por sí mismo en cuanto empiece a particionar discos en RA5.
-5. **Sistema octal y por qué nos interesa aquí (30 min):** convertir binario a octal agrupando en bloques de 3 bits, y explicar **la razón real de que se use octal para permisos**: un permiso rwx son exactamente 3 bits (activado/desactivado cada uno), así que un dígito octal representa exactamente un conjunto de permisos completo. Esto es el "por qué" que conecta ambos contenidos y por eso se enseñan juntos.
-6. **Permisos de archivos y directorios: introducción (60 min):** en Linux, los tres conjuntos de permisos (propietario, grupo, otros) y los tres tipos (lectura, escritura, ejecución), su representación simbólica (`rwxr-xr--`) y numérica (`754`). Mostrar con `ls -la` en una VM o captura. Introducir brevemente que Windows también tiene permisos (NTFS) pero con un modelo distinto (listas de control de acceso, ACL) que se verá en profundidad en RA4 — aquí solo se menciona que existen y que son más granulares.
-7. **De binario a permiso real: ejercicio guiado en la pizarra (40 min):** coger un número octal (por ejemplo, 640) y descomponerlo en binario, y de ahí a qué puede hacer cada conjunto de usuarios. Hacerlo al revés también: dado un `rw-r-----`, obtener el octal.
-8. **Cierre (5 min):** enlazar con RA4 y con RA5: "esto que acabáis de aprender sobre permisos es lo que vais a usar con `chmod`; lo de los múltiplos del byte es lo que os va a explicar por qué el disco que le asignéis a una VM nunca coincide exactamente con el número que hayáis escrito".
+3. **Codificación de caracteres: de binario a texto (20 min):** un byte no solo representa cantidades, también puede representar un carácter — es cuestión de qué tabla de correspondencia se use. Presentar **ASCII** (un byte, 128 caracteres, suficiente para el alfabeto inglés y poco más) como primer sistema de codificación, mostrar por qué se quedó corto (ni acentos, ni eñes, ni alfabetos no latinos), y cómo **Unicode** lo resuelve asignando un identificador único a prácticamente cualquier carácter de cualquier idioma o símbolo existente. Cerrar con que **UTF-8** y **UTF-16** son formas distintas de codificar esos identificadores Unicode en bytes — sin entrar en el detalle técnico de cómo varía el número de bytes por carácter, basta con que sepan que existen y que UTF-8 es, con diferencia, el más usado hoy en la web y en Linux.
+4. **Unidades de medida de la información: SI frente a IEC 80000-13 (30 min):** el byte como unidad base, y sus múltiplos según dos normas distintas: el Sistema Internacional (kilo, mega, giga... en base 10, potencias de 1000) y la norma **IEC 80000-13** —heredera de la antigua IEC 60027-2— que define los prefijos binarios (kibi, mebi, gibi... en base 2, potencias de 1024) precisamente para no confundir ambos sistemas. Cálculo de conversión entre ambos con un par de ejemplos numéricos sencillos.
+5. **El caso real: por qué un disco de 500 GB se queda en ~465 GB (20 min):** ver más abajo el desarrollo completo del ejemplo. Es el momento de conectar la teoría de múltiplos con algo que el alumnado va a comprobar por sí mismo en cuanto empiece a particionar discos en RA5.
+6. **Sistema octal y por qué nos interesa aquí (30 min):** convertir binario a octal agrupando en bloques de 3 bits, y explicar **la razón real de que se use octal para permisos**: un permiso rwx son exactamente 3 bits (activado/desactivado cada uno), así que un dígito octal representa exactamente un conjunto de permisos completo. Esto es el "por qué" que conecta ambos contenidos y por eso se enseñan juntos.
+7. **Permisos de archivos y directorios: introducción (60 min):** en Linux, los tres conjuntos de permisos (propietario, grupo, otros) y los tres tipos (lectura, escritura, ejecución), su representación simbólica (`rwxr-xr--`) y numérica (`754`). Mostrar con `ls -la` en una VM o captura. Introducir brevemente que Windows también tiene permisos (NTFS) pero con un modelo distinto (listas de control de acceso, ACL) que se verá en profundidad en RA4 — aquí solo se menciona que existen y que son más granulares.
+8. **De binario a permiso real: ejercicio guiado en la pizarra (40 min):** coger un número octal (por ejemplo, 640) y descomponerlo en binario, y de ahí a qué puede hacer cada conjunto de usuarios. Hacerlo al revés también: dado un `rw-r-----`, obtener el octal.
+9. **Cierre (5 min):** enlazar con RA4 y con RA5: "esto que acabáis de aprender sobre permisos es lo que vais a usar con `chmod`; lo de los múltiplos del byte es lo que os va a explicar por qué el disco que le asignéis a una VM nunca coincide exactamente con el número que hayáis escrito; y lo de la codificación de caracteres es lo que os va a explicar por qué a veces un archivo de texto se ve lleno de símbolos raros al abrirlo".
 
 ### El caso real: el disco de 500 GB que se queda en ~465 GB
 
@@ -263,12 +265,15 @@ La clave pedagógica de este epígrafe es que **CE-b y CE-h no son dos temas dis
 
 No hace falta enseñar hexadecimal en este punto — no es necesario para permisos y añadiría carga sin beneficio práctico en esta unidad. Tampoco hace falta memorizar la norma IEC 80000-13 por su nombre ni su histórico (viene de la antigua IEC 60027-2, de 1998-2005) — basta con que sepan que existe una norma internacional específica para los prefijos binarios y por qué hizo falta crearla.
 
+Sobre la codificación de caracteres: es un bloque deliberadamente corto (20 min) que no debe convertirse en una clase sobre el funcionamiento interno de UTF-8 (cuántos bytes ocupa cada carácter según su rango, etc.) — eso es contenido de un módulo de programación, no de este. El objetivo aquí es únicamente que entiendan que el texto también se representa en binario mediante una tabla de correspondencia, y que exista más de una tabla (ASCII, Unicode) tiene consecuencias prácticas muy reales que van a ver en cuanto trabajen con archivos y terminales en RA3: un archivo guardado con una codificación y abierto asumiendo otra distinta produce el clásico texto con símbolos ilegibles en vez de tildes o eñes.
+
 ### Errores conceptuales frecuentes
 
 - **Intentar memorizar la tabla de conversión en vez de entender el mecanismo.** Es el error más costoso a medio plazo: memorizar "755 = rwxr-xr-x" sin saber por qué hace que cualquier combinación no memorizada (por ejemplo 640) los deje bloqueados. Insistir siempre en el método (binario → agrupar en 3 → octal), no en la memorización de casos.
 - **Olvidar que hay tres conjuntos de permisos, no uno.** Es habitual que, al principio, piensen en "los permisos del archivo" en genérico, sin distinguir propietario/grupo/otros.
 - **Confundir permiso de ejecución con "se puede abrir".** En un directorio, el permiso de ejecución significa "se puede *entrar* en él" (acceder a su contenido), no "ejecutarlo" como si fuera un programa — es una fuente de confusión constante y merece una aclaración explícita.
 - **Pensar que GB y GiB son "casi lo mismo, da igual".** La diferencia es pequeña en porcentaje a escala de kilobyte (un 2,4%) pero crece con cada múltiplo (un 7% en giga, casi un 10% en tera) — suficiente para generar confusión real al planificar el tamaño de discos y particiones en RA5.
+- **Pensar que ASCII y Unicode son dos cosas del mismo nivel, o que Unicode "sustituye por completo" a ASCII.** En realidad Unicode se diseñó para ser compatible con ASCII (los primeros 128 caracteres coinciden), y UTF-8 es precisamente la codificación que hace esa compatibilidad posible a nivel de bytes — no son alternativas independientes, sino una evolución pensada para no romper lo anterior.
 
 ### Preguntas frecuentes del alumnado
 
@@ -276,10 +281,14 @@ No hace falta enseñar hexadecimal en este punto — no es necesario para permis
 - *"¿Y en Windows también hay algo como 755?"* — No exactamente: NTFS usa permisos más granulares y no se resumen con la misma notación numérica. La equivalencia conceptual (quién puede leer/escribir/ejecutar) sí existe, pero el mecanismo es diferente y se verá en RA4 Windows.
 - *"¿Entonces me han estafado al venderme un disco de 500 GB?"* — No: son exactamente los bytes que se anuncian, contados en base 10 tal y como marca el SI. Lo que ocurre es que el sistema operativo los muestra contados en base 2 (GiB) pero etiquetados como si fueran GB — es un problema de etiquetado heredado históricamente, no de cantidad real de bytes.
 - *"¿Y con la RAM pasa lo mismo?"* — Al revés: la memoria RAM se fabrica físicamente en potencias de 2 (por su propio diseño en circuitos), así que ahí no hay discrepancia entre lo que anuncia el fabricante y lo que muestra el sistema — es una buena pregunta para remarcar que el problema del disco es una cuestión de convención de medida, no un fenómeno universal de todo el hardware.
+- *"¿Por qué a veces abro un archivo de texto y sale lleno de símbolos raros en vez de letras?"* — Es el síntoma más típico de un problema de codificación: el archivo se guardó con una tabla de caracteres (por ejemplo UTF-8) y se está abriendo asumiendo otra distinta. Los bytes son exactamente los mismos, pero se están interpretando con la tabla de correspondencia equivocada.
+- *"¿Por qué no se usó Unicode desde el principio, en vez de ASCII primero?"* — Buen ejercicio de perspectiva histórica: ASCII se creó en los años 60, cuando el objetivo era representar el alfabeto inglés con el mínimo número de bits posible por motivos de coste y velocidad; Unicode, de los años 90, nace precisamente para resolver el problema que ASCII dejó sin cubrir (el resto de idiomas del mundo), en un momento en que esa limitación de recursos ya no era tan crítica.
 
 ### Actividad / práctica
 
 **Enunciado (parte 1):** tabla de conversión decimal-binario-octal a completar con 8-10 valores entre 0 y 7 (para los dígitos octales individuales) y luego 3-4 valores de un byte completo (0-255).
+
+**Enunciado (parte 1b — codificación de caracteres):** a partir de una tabla ASCII reducida proporcionada en clase (letras mayúsculas, minúsculas y algunos símbolos con su valor decimal), traducir una palabra corta a su secuencia de valores ASCII, y a la inversa, decodificar una secuencia de valores dada. Pregunta final de reflexión: "¿por qué la palabra 'Ñandú' no se puede representar completa en ASCII, y sí en Unicode?".
 
 **Enunciado (parte 2 — múltiplos del byte):** dada la capacidad anunciada de tres discos distintos (1 TB, 256 GB, 500 GB), calcular cuántos GiB/TiB mostrará aproximadamente el sistema operativo al formatearlos, mostrando el cálculo (no solo el resultado).
 
@@ -289,12 +298,13 @@ No hace falta enseñar hexadecimal en este punto — no es necesario para permis
 
 **Solución (parte 3):** `rwxr-xr-x` → 755; `rw-rw-r--` → 664; `rwx------` → 700; `r--r--r--` → 444; `rwxrwxrwx` → 777.
 
-**Qué mirar al corregir:** en la parte 2, el fallo más habitual es dividir por 1000³/1000⁴ en vez de 1024³/1024⁴ — es exactamente el error que confirma que no han entendido la diferencia entre ambas normas, no un simple fallo de cálculo. En la parte 3, el fallo más revelador es cuando el resultado final es correcto pero el alumno no puede explicar el paso intermedio (la conversión a binario) — indica que ha memorizado un patrón en vez de entender el mecanismo, y es precisamente el tipo de error que se manifestará en RA4 en cuanto aparezca un valor no memorizado.
+**Qué mirar al corregir:** en la parte 1b, el error más habitual es que intenten codificar directamente caracteres con tilde o eñes usando la tabla ASCII reducida — es exactamente el punto que se quiere que descubran por sí mismos, y confirma si han entendido la limitación de ASCII o solo la han memorizado como una frase. En la parte 2, el fallo más habitual es dividir por 1000³/1000⁴ en vez de 1024³/1024⁴ — es exactamente el error que confirma que no han entendido la diferencia entre ambas normas, no un simple fallo de cálculo. En la parte 3, el fallo más revelador es cuando el resultado final es correcto pero el alumno no puede explicar el paso intermedio (la conversión a binario) — indica que ha memorizado un patrón en vez de entender el mecanismo, y es precisamente el tipo de error que se manifestará en RA4 en cuanto aparezca un valor no memorizado.
 
 ### Curiosidades
 
 - El modelo de permisos `rwx` de propietario/grupo/otros viene directamente de Unix, de los años 70, y se ha mantenido prácticamente intacto en Linux y macOS (que también deriva de Unix) durante más de cincuenta años — pocas piezas de diseño de software han demostrado tanta durabilidad.
 - Los prefijos binarios (kibi, mebi, gibi...) los propuso formalmente la Comisión Electrotécnica Internacional en 1998 —precisamente para resolver esta ambigüedad de una vez—, pero más de veinticinco años después la mayoría de sistemas operativos y fabricantes de software todavía no los usan en su interfaz, y siguen mostrando "GB" cuando en realidad calculan en GiB.
+- Unicode no se limita a letras y símbolos de idiomas: también asigna un código a los emojis, que son, técnicamente, caracteres Unicode como cualquier otro — es un buen ejemplo cercano al alumnado de que "codificación de caracteres" no es un tema abstracto y lejano.
 
 ---
 
@@ -359,6 +369,7 @@ Epígrafe deliberadamente corto — es el contenido de la unidad con menos relac
 - La conversión binario-octal existe, en el contexto de esta unidad, para poder leer y escribir permisos: cada dígito octal representa un conjunto completo de permisos `rwx`.
 - Los permisos definen qué puede hacer el propietario, el grupo y el resto de usuarios sobre un archivo o directorio.
 - El byte tiene múltiplos según dos normas distintas: el SI (kilo/mega/giga, base 10, los que anuncia el fabricante) y la IEC 80000-13 (kibi/mebi/gibi, base 2, los que suele calcular y mal-etiquetar el sistema operativo como "GB") — de ahí que un disco de 500 GB se muestre como ~465 GB.
+- El texto también se representa en binario: ASCII fue la primera tabla de codificación de caracteres, limitada al alfabeto inglés; Unicode (codificado habitualmente en UTF-8 o UTF-16) la sustituyó para poder representar cualquier idioma, manteniendo compatibilidad con ASCII.
 - El journaling protege la consistencia del sistema de archivos ante interrupciones, pero no sustituye a las copias de seguridad.
 
 ### Tabla de correspondencia RA/CE
@@ -383,6 +394,7 @@ Epígrafe deliberadamente corto — es el contenido de la unidad con menos relac
 - Verdadero/falso o relación de conceptos sobre tipos de núcleo (monolítico/microkernel/híbrido) y qué sistema operativo real usa cada uno.
 - Verdadero/falso sobre estados de procesos, incluyendo algún distractor que confunda "bloqueado" con "terminado".
 - Ejercicio de conversión decimal-binario-octal y de notación de permisos (simbólica ↔ numérica), del mismo estilo que la práctica del epígrafe 5 pero con valores distintos.
+- Pregunta corta: "explica por qué ASCII no puede representar la palabra 'mañana' completa, y qué sistema de codificación sí puede".
 - Ejercicio de cálculo de múltiplos del byte (SI ↔ IEC 80000-13) con la capacidad de un disco distinto al usado en clase, pidiendo que se muestre el cálculo, no solo el resultado.
 - Pregunta de caso corto (versión reducida del caso práctico integrador) para comprobar si conectan permisos con sistemas de archivos y con la arquitectura por capas.
 - Pregunta de reflexión breve sobre journaling, evitando que se pueda responder solo con la palabra "copia de seguridad".
